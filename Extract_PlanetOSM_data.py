@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jun  4 17:56:21 2025
-
-@author: Acer
-"""
-
 import os
 import requests
 from pyrosm import get_data, OSM
@@ -22,7 +15,7 @@ def extract_and_save_layer(pbf_file, region_shapefile, layer, zip_filename):
     osm = OSM(pbf_file, bounding_box=bbox)
 
     if layer == "places":
-        # ✅ Correct way to extract place-type POIs
+        #  Correct way to extract place-type POIs
         custom_filter = {"place": ["village", "town", "hamlet", "suburb", "locality"]}
         gdf = osm.get_pois(custom_filter=custom_filter)
     elif layer == "roads":
@@ -31,7 +24,7 @@ def extract_and_save_layer(pbf_file, region_shapefile, layer, zip_filename):
         raise ValueError("Unsupported layer requested.")
 
     if gdf is None or gdf.empty:
-        print(f"⚠️ No data found for {layer}")
+        print(f" No data found for {layer}")
         return
 
     gdf = gdf.to_crs(region_gdf.crs)
@@ -49,10 +42,10 @@ def extract_and_save_layer(pbf_file, region_shapefile, layer, zip_filename):
             if os.path.exists(file):
                 zipf.write(file, arcname=os.path.basename(file))
 
-    print(f"✅ {layer.capitalize()} saved to {zip_filename}")
+    print(f" {layer.capitalize()} saved to {zip_filename}")
     
 def download_planet_osm_data(region_name, region_shapefile):
-    print("⏬ Downloading PBF for:", region_name)
+    print(" Downloading PBF for:", region_name)
     pbf_file = download_pbf(region_name, "planet_osm_pbf")
 
     extract_and_save_layer(pbf_file, region_shapefile, "places", "planet_osm_places.zip")
